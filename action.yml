@@ -13,6 +13,10 @@ inputs:
     description: 'rpm release'
     required: false
     default: 1
+  arch:
+    description: 'build architecture'
+    required: false
+    default: x86_64
 
 outputs:
   rpms_path:
