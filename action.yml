@@ -1,0 +1,21 @@
+name: 'RPM Build'
+description: 'Build RPMs from spec file and upload it as Artifact or Release Asset'
+author: 'carlospeon@gmail.com'
+
+inputs: 
+  spec:
+    description: 'path to the spec file'
+    required: true
+    default: '*.spec'
+  version:
+    description: 'rpm version to build'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+branding:
+  icon: 'package'
+  color: 'red'
+
