@@ -5,6 +5,7 @@ set -eo pipefail
 spec="$INPUT_SPEC"
 version="$INPUT_VERSION"
 release="$INPUT_RELEASE"
+arch="$INPUT_ARCH"
 
 target=".rpmbuild"
 no_clean=""
@@ -24,7 +25,7 @@ rpmbuild --define "_topdir ${PWD}/${target}" \
 
 yum-builddep -y ${target}/SRPMS/${srpm}
 
-rpmbuild --define "_topdir ${PWD}/${target}" \
+rpmbuild --define "_topdir ${PWD}/${target}" --target "${arch}" \
   --define "version ${version}" --define "release ${release}" -bb ${spec}
 
 echo "rpms_path=${target}/RPMS" >> $GITHUB_OUTPUT
