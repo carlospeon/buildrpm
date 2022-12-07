@@ -21,7 +21,6 @@ git archive --output=${target}/SOURCES/collectd-${version}.tar.gz \
 rpmbuild --define "_topdir ${PWD}/${target}" \
   --define "version ${version}" --define "release ${release}" -bs ${spec}
 
-dnf config-manager --set-enabled devel
 dnf builddep -y ${target}/SRPMS/${srpm}
 
 rpmbuild --define "_topdir ${PWD}/${target}" \
