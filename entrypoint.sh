@@ -9,14 +9,15 @@ release="$INPUT_RELEASE"
 target=".rpmbuild"
 no_clean=""
 
+name="$(grep ^Name ${spec} | cut -f 2 -d : | xargs echo)"
 dist="$(rpm --eval '%{?dist}')"
-srpm="collectd-${version}-${release}${dist}.src.rpm"
+srpm="${name}-${version}-${release}${dist}.src.rpm"
 
 [ -d "${target}" ] && rm -fr ${target}
 mkdir -p ${target}/{SOURCES,BUILD,RPMS,SRPMS,BUILDROOT,SPECS}
 
-git archive --output=${target}/SOURCES/collectd-${version}.tar.gz \
-  --prefix=collectd-${version}/ HEAD
+git archive --output=${target}/SOURCES/${name}-${version}.tar.gz \
+  --prefix=${name}-${version}/ HEAD
 
 rpmbuild --define "_topdir ${PWD}/${target}" \
   --define "version ${version}" --define "release ${release}" -bs ${spec}
