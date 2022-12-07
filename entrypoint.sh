@@ -17,7 +17,7 @@ srpm="${name}-${version}-${release}${dist}.src.rpm"
 mkdir -p ${target}/{SOURCES,BUILD,RPMS,SRPMS,BUILDROOT,SPECS}
 
 git archive --output=${target}/SOURCES/${name}-${version}.tar.gz \
-  --prefix=collectd-${version}/ HEAD
+  --prefix=${name}-${version}/ HEAD
 
 rpmbuild --define "_topdir ${PWD}/${target}" \
   --define "version ${version}" --define "release ${release}" -bs ${spec}
