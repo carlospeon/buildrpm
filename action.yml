@@ -6,10 +6,17 @@ inputs:
   spec:
     description: 'path to the spec file'
     required: true
-    default: '*.spec'
   version:
-    description: 'rpm version to build'
+    description: 'rpm version'
     required: true
+  release:
+    description: 'rpm release'
+    required: false
+    default: 1
+
+outputs:
+  rpms_path:
+    description: 'path to RPMS directory'
 
 runs:
   using: 'docker'
