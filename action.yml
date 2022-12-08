@@ -7,16 +7,12 @@ inputs:
     description: 'path to the spec file'
     required: true
   version:
-    description: 'rpm version'
+    description: 'rpm version that will be defined in rpmbuild'
     required: true
-  release:
-    description: 'rpm release'
+  clean:
+    description: 'clean rpmbuild environment before build'
     required: false
-    default: 1
-  arch:
-    description: 'build architecture'
-    required: false
-    default: x86_64
+    default: false
 
 outputs:
   rpms_path:
