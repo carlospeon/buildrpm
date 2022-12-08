@@ -4,28 +4,44 @@ set -eo pipefail
 
 spec="$INPUT_SPEC"
 version="$INPUT_VERSION"
-release="$INPUT_RELEASE"
-arch="$INPUT_ARCH"
+clean="$INPUT_CLEAN"
+
+if [ -z "$spec" -o  -z "$version" ]; then
+  echo "Failed! Missing spec or version."
+  exit 1
+fi
 
 target=".rpmbuild"
-no_clean=""
 
 name="$(grep ^Name ${spec} | cut -f 2 -d : | xargs echo)"
-dist="$(rpm --eval '%{?dist}')"
-srpm="${name}-${version}-${release}${dist}.src.rpm"
+release_macro="$(grep ^Release ${spec} | cut -f 2 -d : | xargs echo)"
+release="$(rpm --eval '${release_macro}')"
 
-[ -d "${target}" ] && rm -fr ${target}
-mkdir -p ${target}/{SOURCES,BUILD,RPMS,SRPMS,BUILDROOT,SPECS}
+srpm="${name}-${version}-${release}.src.rpm"
+
+for i in name release_macro release srpm; do
+  eval val="\$${i}"
+  echo "$i: $val"
+done
+
+case "$clean" in
+  [Yy][Ee][Ss]|[Tt][Rr][Uu][Ee])
+    echo "Cleaning rpmbuild environment"
+    [ -d "${target}" ] && rm -fr ${target}
+    ;;
+esac
+[ ! -d "${target}" ] &&
+  mkdir -p ${target}/{SOURCES,BUILD,RPMS,SRPMS,BUILDROOT,SPECS}
 
 git archive --output=${target}/SOURCES/${name}-${version}.tar.gz \
   --prefix=${name}-${version}/ HEAD
 
 rpmbuild --define "_topdir ${PWD}/${target}" \
-  --define "version ${version}" --define "release ${release}" -bs ${spec}
+  --define "version ${version}" -bs ${spec}
 
 yum-builddep -y ${target}/SRPMS/${srpm}
 
-rpmbuild --define "_topdir ${PWD}/${target}" --target "${arch}" \
-  --define "version ${version}" --define "release ${release}" -bb ${spec}
+rpmbuild --define "_topdir ${PWD}/${target}" \
+  --define "version ${version}" -bb ${spec}
 
 echo "rpms_path=${target}/RPMS" >> $GITHUB_OUTPUT
