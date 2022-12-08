@@ -13,9 +13,9 @@ fi
 
 target=".rpmbuild"
 
-name="$(grep ^Name ${spec} | cut -f 2 -d : | xargs echo)"
-release_macro="$(grep ^Release ${spec} | cut -f 2 -d : | xargs echo)"
-release="$(rpm --eval '${release_macro}')"
+name=$(grep ^Name ${spec} | cut -f 2 -d : | xargs echo)
+release_macro=$(grep ^Release ${spec} | cut -f 2 -d : | xargs echo)
+release=$(rpm --eval "${release_macro}")
 
 srpm="${name}-${version}-${release}.src.rpm"
 
