@@ -4,7 +4,7 @@ set -eo pipefail
 
 spec="$INPUT_SPEC"
 version="$INPUT_VERSION"
-clean="$INPUT_CLEAN"
+clean="${INPUT_CLEAN,,}"
 
 if [ -z "$spec" -o  -z "$version" ]; then
   echo "Failed! Missing spec or version."
@@ -24,12 +24,10 @@ for i in name release_macro release srpm; do
   echo "$i: $val"
 done
 
-case "$clean" in
-  [Yy][Ee][Ss]|[Tt][Rr][Uu][Ee])
-    echo "Cleaning rpmbuild environment"
-    [ -d "${target}" ] && rm -fr ${target}
-    ;;
-esac
+if [ "$clean" == "true" -a -d "${target}" ]; then
+  echo "Cleaning rpmbuild environment"
+  rm -fr ${target}
+fi
 [ ! -d "${target}" ] &&
   mkdir -p ${target}/{SOURCES,BUILD,RPMS,SRPMS,BUILDROOT,SPECS}
 
