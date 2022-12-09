@@ -24,7 +24,7 @@ for i in name release_macro release srpm; do
   echo "$i: $val"
 done
 
-if [ "$clean" == "true" -a -d "${target}" ]; then
+if [[ "$clean" =~ ^(true|yes)$ && -d "${target}" ]]; then
   echo "Cleaning rpmbuild environment"
   rm -fr ${target}
 fi
