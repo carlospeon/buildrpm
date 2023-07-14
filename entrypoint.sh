@@ -31,6 +31,7 @@ fi
 [ ! -d "${target}" ] &&
   mkdir -p ${target}/{SOURCES,BUILD,RPMS,SRPMS,BUILDROOT,SPECS}
 
+git config --global --add safe.directory '*'
 git archive --output=${target}/SOURCES/${name}-${version}.tar.gz \
   --prefix=${name}-${version}/ HEAD
 
